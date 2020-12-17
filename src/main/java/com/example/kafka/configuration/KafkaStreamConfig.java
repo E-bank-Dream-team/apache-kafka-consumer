@@ -3,7 +3,6 @@ package com.example.kafka.configuration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -25,6 +24,7 @@ import org.springframework.kafka.support.serializer.JsonSerde;
 
 import com.example.kafka.models.Transaction;
 import com.example.kafka.models.TransactionRequest;
+import com.example.kafka.utils.KafkaFeeder;
 
 @Configuration
 @EnableKafkaStreams
@@ -63,8 +63,7 @@ public class KafkaStreamConfig {
         KStream<String, TransactionRequest> inputStream = kStreamBuilder.stream(inputTopic, consumed);
         KStream<String, List<Transaction>> outputStream = inputStream.mapValues((k, v) -> {
             logger.info(String.format("Processing: [%s]", v));
-            // return KafkaFeeder.getMockedTransactions();
-            return new ArrayList<Transaction>();
+            return KafkaFeeder.getMockedTransactions();
         });
         
         outputStream.to(outputTopic, produced);

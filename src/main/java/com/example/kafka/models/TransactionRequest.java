@@ -14,6 +14,11 @@ public class TransactionRequest {
 		this.date = date;
 	}
 	
+	@SuppressWarnings("unused")
+	private TransactionRequest() {
+		super();
+	}
+	
 	public Long getCustomerId() {
 		return customerId;
 	}
