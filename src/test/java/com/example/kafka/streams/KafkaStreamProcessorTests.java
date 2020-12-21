@@ -22,7 +22,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
-import com.example.kafka.ApacheKafkaConsumerApplication;
 import com.example.kafka.models.Transaction;
 import com.example.kafka.models.TransactionRequest;
 
@@ -37,7 +36,7 @@ public class KafkaStreamProcessorTests {
 	@Test
 	public void test() {
 		
-		Topology topology = ApacheKafkaConsumerApplication.getTransactionsTopology();
+		Topology topology = KafkaTopologyFactory.getTransactionsTopology();
 		
 		Properties props = new Properties();
 		props.put(StreamsConfig.APPLICATION_ID_CONFIG, "test");
