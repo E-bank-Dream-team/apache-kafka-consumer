@@ -18,6 +18,7 @@ import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.TopologyTestDriver;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
@@ -33,10 +34,13 @@ public class KafkaStreamProcessorTests {
 	
 	private static TopologyTestDriver testDriver;
 	
+	@Autowired
+	private KafkaTopologyFactory topologyFactory;
+	
 	@Test
 	public void test() {
 		
-		Topology topology = KafkaTopologyFactory.getTransactionsTopology();
+		Topology topology = topologyFactory.getTransactionsTopology();
 		
 		Properties props = new Properties();
 		props.put(StreamsConfig.APPLICATION_ID_CONFIG, "test");

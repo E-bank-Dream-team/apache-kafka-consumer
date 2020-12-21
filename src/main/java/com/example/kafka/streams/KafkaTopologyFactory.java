@@ -27,51 +27,41 @@ public class KafkaTopologyFactory {
 	
 	private final static Logger logger = LoggerFactory.getLogger(ApacheKafkaConsumerApplication.class);
 	
-	private static String inputTopic;
-	private static String outputTopic;
-	private static String bootstrapAddress;
+	@Value("${default.kafka.input.topic.name}")
+	private String inputTopicName;
 	
-	public static Topology getTransactionsTopology() {
+	@Value("${default.kafka.output.topic.name}")
+	private String outputTopicName;
+	
+	@Value("${spring.kafka.bootstrap-servers}")
+	private String bootstrapAddressName;
+	
+	public Topology getTransactionsTopology() {
 		StreamsBuilder builder = new StreamsBuilder();
 		
 		Consumed<String, TransactionRequest> consumed = Consumed.with(Serdes.String(), new JsonSerde<TransactionRequest>(TransactionRequest.class));
 		Produced<String, List<Transaction>> produced = Produced.with(Serdes.String(), new JsonSerde<List<Transaction>>(List.class));
 		
-		KStream<String, TransactionRequest> inputStream = builder.stream(inputTopic, consumed);
+		KStream<String, TransactionRequest> inputStream = builder.stream(inputTopicName, consumed);
 		KStream<String, List<Transaction>> outputStream = inputStream.mapValues((k, v) -> {
 			logger.info(String.format("Processing: [%s]", v));
 			return KafkaFeeder.getMockedTransactions();
 		});
 		
-		outputStream.to(outputTopic, produced);
+		outputStream.to(outputTopicName, produced);
 		
 		return builder.build();
 	}
 	
-	public static Properties getConfig() {
+	public Properties getConfig() {
 		Properties config = new Properties();
-		config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+		config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddressName);
 		config.put(StreamsConfig.APPLICATION_ID_CONFIG, "other-group");
 		config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String()
 				.getClass());
 		config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonSerde.class);
 		config.put(JsonDeserializer.TRUSTED_PACKAGES, "com.example.kafka.models");
 		return config;
-	}
-	
-	@Value("${default.kafka.input.topic.name}")
-	public void setInputTopicName(String name) {
-		KafkaTopologyFactory.inputTopic = name;
-	}
-	
-	@Value("${default.kafka.output.topic.name}")
-	public void setOutputTopicName(String name) {
-		KafkaTopologyFactory.outputTopic = name;
-	}
-	
-	@Value("${spring.kafka.bootstrap-servers}")
-	public void setBootstrapServers(String name) {
-		KafkaTopologyFactory.bootstrapAddress = name;
 	}
 	
 }
