@@ -9,7 +9,7 @@ import com.example.kafka.streams.KafkaStreamRunner;
 @SpringBootApplication
 public class ApacheKafkaConsumerApplication {
 	
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(ApacheKafkaConsumerApplication.class, args);
 		
 		KafkaStreamRunner runner = context.getBean(KafkaStreamRunner.class);

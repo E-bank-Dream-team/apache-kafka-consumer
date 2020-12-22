@@ -17,7 +17,6 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerde;
 import org.springframework.stereotype.Component;
 
-import com.example.kafka.ApacheKafkaConsumerApplication;
 import com.example.kafka.models.Transaction;
 import com.example.kafka.models.TransactionRequest;
 import com.example.kafka.utils.KafkaFeeder;
@@ -25,7 +24,7 @@ import com.example.kafka.utils.KafkaFeeder;
 @Component
 public class KafkaTopologyFactory {
 	
-	private final static Logger logger = LoggerFactory.getLogger(ApacheKafkaConsumerApplication.class);
+	private final static Logger logger = LoggerFactory.getLogger(KafkaTopologyFactory.class);
 	
 	@Value("${default.kafka.input.topic.name}")
 	private String inputTopicName;
